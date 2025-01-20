@@ -4,27 +4,34 @@ using UnityEngine;
 
 public class CollsionDetector : MonoBehaviour
 {
+    public Cauldron cauldron;
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-    // Funkcja wywo³ywana przy kolizji
+    // Funkcja wywoï¿½ywana przy kolizji
     private void OnCollisionEnter(Collision collision)
     {
-        // SprawdŸ, czy nazwa obiektu to "Potion_Red"
-        if (collision.gameObject.name == "Potion_Red")
+        // Sprawdï¿½, czy nazwa obiektu to "Potion_Red"
+        if (collision.gameObject.name == "Potion_Red" || collision.gameObject.name == "RaddishCut")
         {
-            Debug.Log("Potion_Red zosta³ dodany do kocio³ka!");
-            // Zniszcz obiekt, z którym nast¹pi³a kolizja
-            Destroy(collision.gameObject);
+            Debug.Log(collision.gameObject.name + " zostaï¿½ dodany do kocioï¿½ka!");
+            // Zniszcz obiekt, z ktï¿½rym nastï¿½piï¿½a kolizja
+            //Destroy(collision.gameObject);
+            collision.gameObject.SetActive(false);
+            cauldron.addIngredient(collision.gameObject);
+        }
+        else
+        {
+            Debug.Log(collision.gameObject.name + " nie moÅ¼e zostaÄ‡ dodany do kocioÅ‚ka!");
         }
     }
 }
