@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CollsionDetector : MonoBehaviour
 {
+    public Cauldron cauldron;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,11 +21,17 @@ public class CollsionDetector : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         // Sprawd�, czy nazwa obiektu to "Potion_Red"
-        if (collision.gameObject.name == "Potion_Red")
+        if (collision.gameObject.name == "Potion_Red" || collision.gameObject.name == "RaddishCut")
         {
-            Debug.Log("Potion_Red zosta� dodany do kocio�ka!");
+            Debug.Log(collision.gameObject.name + " zosta� dodany do kocio�ka!");
             // Zniszcz obiekt, z kt�rym nast�pi�a kolizja
-            Destroy(collision.gameObject);
+            //Destroy(collision.gameObject);
+            collision.gameObject.SetActive(false);
+            cauldron.addIngredient(collision.gameObject);
+        }
+        else
+        {
+            Debug.Log(collision.gameObject.name + " nie może zostać dodany do kociołka!");
         }
     }
 }
