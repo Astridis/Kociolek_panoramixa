@@ -5,20 +5,20 @@ using UnityEngine;
 public class CuttableObject : MonoBehaviour
 {
     public GameObject radishcut;  // Assign in Inspector
-
     private bool isCut = false;
-    
 
     void OnTriggerEnter(Collider other)
     {
-        if (!isCut && other.CompareTag("Knife")) // Ensure the knife has the "Knife" tag
+        if (!isCut && other.CompareTag("Knife"))
         {
+            other.GetComponent<KnifeCut>()?.IsCuttingMotion(); // Optional: log or check directly
             CutRadish();
         }
     }
 
     public void CutRadish()
     {
+        if (isCut) return; // Prevent multiple cuts
         isCut = true;
 
         Vector3 originalPosition = transform.position;
@@ -26,6 +26,7 @@ public class CuttableObject : MonoBehaviour
 
         radishcut.transform.position = originalPosition;
         radishcut.transform.rotation = originalRotation;
+
         // Hide the whole radish
         gameObject.SetActive(false);
 
