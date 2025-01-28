@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class BottleShake : MonoBehaviour
 {
@@ -12,10 +13,17 @@ public class BottleShake : MonoBehaviour
     private Vector3 lastVelocity = Vector3.zero; // Stores velocity of the previous frame
     private int shakeCount = 0;
     private float shakeTimer = 0f;
-    private bool corkPopped = false;
-
+    public bool corkPopped = false;
+    public GameObjectStateSaver objectSaver;
+    public bool isGrabbed = false;
+    private XRGrabInteractable grabInteractable;
+    // Start is called before the first frame update
     void Start()
     {
+        objectSaver = new GameObjectStateSaver(gameObject);
+        grabInteractable = GetComponent<XRGrabInteractable>();
+        grabInteractable.onSelectEntered.AddListener(OnGrabbed);
+        grabInteractable.onSelectExited.AddListener(OnReleased);
         lastFramePosition = transform.position;
     }
 
@@ -34,7 +42,6 @@ public class BottleShake : MonoBehaviour
         if (yVelocityDelta > shakeThreshold)
         {
             shakeCount++;
-            shakeTimer = 0f; // Reset the timer on a valid shake
             Debug.Log("Shake detected! Count: " + shakeCount);
 
             if (shakeCount >= requiredShakes)
@@ -42,11 +49,16 @@ public class BottleShake : MonoBehaviour
                 PopCork();
             }
         }
+        if (yVelocityDelta < shakeThreshold && shakeCount > 0)
+        {
+            shakeTimer = 0f; // Reset the timer after a valid shake
+        }
 
         // Reset shake count if idle for too long
         shakeTimer += Time.deltaTime;
         if (shakeTimer > shakeResetTime)
         {
+            Debug.Log("resetting shakeCount");
             shakeCount = 0;
         }
     }
@@ -70,5 +82,26 @@ public class BottleShake : MonoBehaviour
         corkRigidbody.AddForce(Vector3.up * corkPopForce, ForceMode.Impulse);
 
         Debug.Log("Cork popped!");
+    }
+
+    public void resetBottleShake()
+    {
+        objectSaver.Revert();
+        cork.GetComponent<Cork>().resetCork();
+        corkPopped = false;
+        shakeCount = 0;
+        shakeTimer = 0f;
+    }
+
+    private void OnGrabbed(XRBaseInteractor interactor)
+    {
+        isGrabbed = true;
+        Debug.Log("Object is grabbed.");
+    }
+
+    private void OnReleased(XRBaseInteractor interactor)
+    {
+        isGrabbed = false;
+        Debug.Log("Object is released.");
     }
 }

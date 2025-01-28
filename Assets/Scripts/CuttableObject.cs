@@ -1,11 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class CuttableObject : MonoBehaviour
 {
     public GameObject radishcut;  // Assign in Inspector
     private bool isCut = false;
+    public GameObjectStateSaver objectSaver;
+    public bool isGrabbed = false;
+    private XRGrabInteractable grabInteractable;
+    // Start is called before the first frame update
+    void Start()
+    {
+        objectSaver = new GameObjectStateSaver(gameObject);
+        grabInteractable = GetComponent<XRGrabInteractable>();
+        grabInteractable.onSelectEntered.AddListener(OnGrabbed);
+        grabInteractable.onSelectExited.AddListener(OnReleased);
+    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -35,5 +47,22 @@ public class CuttableObject : MonoBehaviour
 
         // Add Rigidbody so they can move
         radishcut.GetComponent<Rigidbody>().isKinematic = false;
+    }
+
+    public void resetRadish()
+    {
+        objectSaver.Revert();
+    }
+
+    private void OnGrabbed(XRBaseInteractor interactor)
+    {
+        isGrabbed = true;
+        Debug.Log("Object is grabbed.");
+    }
+
+    private void OnReleased(XRBaseInteractor interactor)
+    {
+        isGrabbed = false;
+        Debug.Log("Object is released.");
     }
 }

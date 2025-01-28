@@ -22,23 +22,40 @@ public class Cauldron : XRSimpleInteractable
 
     public void addIngredient(GameObject ingredient)
     {
+        if ((bool)ingredients.Find(ingr => ingr == ingredient))
+        {
+            Debug.Log("it was already in the cauldron");
+            return;
+        }
         ingredients.Add(ingredient);
     }
 
+
     public void checkRecipe(Game theGameObject)
     {
-        var correct = theGameObject.currentRecipe.checkRecipe(ingredients);
-        Debug.Log("ingredients: " + ingredients.ToString());
+        Debug.Log("ingredients(" + ingredients.Count.ToString() + "): " + ingredients.ToString());
+
+        var correct = false;
+
+        if (theGameObject.currentRecipe)
+        {
+            correct = theGameObject.currentRecipe.checkRecipe(ingredients);
+        }
+        else
+        {
+            Debug.Log("No recipe has been selected!");
+            return;
+        }
 
         if (correct)
         {
             Debug.Log("Congratulations! Recipe Completed!");
+            ingredients.Clear();
         }
         else
         {
             Debug.Log("Recipe not completed, resetting the cauldron");
             ingredients.Clear();
-            Debug.Log("ingredients: " + ingredients.ToString());
         }
     }
 }
