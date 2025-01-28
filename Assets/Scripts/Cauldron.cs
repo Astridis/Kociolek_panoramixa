@@ -50,6 +50,7 @@ public class Cauldron : XRSimpleInteractable
         if (correct)
         {
             Debug.Log("Congratulations! Recipe Completed!");
+            ingredients.Clear();
         }
         else
         {
