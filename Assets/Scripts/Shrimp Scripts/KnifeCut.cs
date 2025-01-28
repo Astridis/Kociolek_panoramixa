@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class KnifeCut : MonoBehaviour
 {
-    public float minCutVelocity = 1.0f;  // Minimum velocity to register a cut
+    public float minCutVelocity = 5.0f;  // Minimum velocity to register a cut
     public float angleThreshold = 45.0f; // Maximum allowable angle deviation for a cut
 
     private Vector3 previousPosition;
