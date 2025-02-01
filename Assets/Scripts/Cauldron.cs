@@ -7,11 +7,12 @@ public class Cauldron : XRSimpleInteractable
 {
     public List<GameObject> ingredients = new List<GameObject>();
     // public Game theGameObject;
+    Dialog dialog;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        dialog = Dialog.Instance;
     }
 
     // Update is called once per frame
@@ -24,7 +25,7 @@ public class Cauldron : XRSimpleInteractable
     {
         if ((bool)ingredients.Find(ingr => ingr == ingredient))
         {
-            Debug.Log("it was already in the cauldron");
+            dialog.Show("it was already in the cauldron");
             return;
         }
         ingredients.Add(ingredient);
@@ -33,7 +34,7 @@ public class Cauldron : XRSimpleInteractable
 
     public void checkRecipe(Game theGameObject)
     {
-        Debug.Log("ingredients(" + ingredients.Count.ToString() + "): " + ingredients.ToString());
+        string message = "ingredients(" + ingredients.Count.ToString() + "): " + string.Join(", ", ingredients.ConvertAll<string>(ingr => ingr.name));
 
         var correct = false;
 
@@ -43,18 +44,18 @@ public class Cauldron : XRSimpleInteractable
         }
         else
         {
-            Debug.Log("No recipe has been selected!");
+            dialog.Show(message + "\n" + "No recipe has been selected!");
             return;
         }
 
         if (correct)
         {
-            Debug.Log("Congratulations! Recipe Completed!");
+            dialog.Show(message + "\n" + "Congratulations! Recipe Completed!");
             ingredients.Clear();
         }
         else
         {
-            Debug.Log("Recipe not completed, resetting the cauldron");
+            dialog.Show(message + "\n" + "Recipe not completed, resetting the cauldron");
             ingredients.Clear();
         }
     }
