@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+// using Dialog;
 
 public class BottleShake : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class BottleShake : MonoBehaviour
     public GameObjectStateSaver objectSaver;
     public bool isGrabbed = false;
     private XRGrabInteractable grabInteractable;
+
+    Dialog dialog;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,6 +28,7 @@ public class BottleShake : MonoBehaviour
         grabInteractable.onSelectEntered.AddListener(OnGrabbed);
         grabInteractable.onSelectExited.AddListener(OnReleased);
         lastFramePosition = transform.position;
+        dialog = Dialog.Instance;
     }
 
     void Update()
@@ -96,7 +100,10 @@ public class BottleShake : MonoBehaviour
     private void OnGrabbed(XRBaseInteractor interactor)
     {
         isGrabbed = true;
-        Debug.Log("Object is grabbed.");
+        if (!corkPopped)
+        {
+            dialog.Show("Shake this bottle 5 times to open it.");
+        }
     }
 
     private void OnReleased(XRBaseInteractor interactor)

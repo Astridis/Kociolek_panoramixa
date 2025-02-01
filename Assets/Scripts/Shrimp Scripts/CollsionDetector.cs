@@ -5,10 +5,11 @@ using UnityEngine;
 public class CollsionDetector : MonoBehaviour
 {
     public Cauldron cauldron;
+    Dialog dialog;
     // Start is called before the first frame update
     void Start()
     {
-
+        dialog = Dialog.Instance;
     }
 
     // Update is called once per frame
@@ -26,22 +27,23 @@ public class CollsionDetector : MonoBehaviour
         {
             if (bottle.corkPopped)
             {
-                Debug.Log(collision.gameObject.name + " zostal dodany do kociolka!");
+                dialog.Show(collision.gameObject.name + " zostal dodany do kociolka!");
                 cauldron.addIngredient(collision.gameObject);
                 bottle.resetBottleShake();
                 return;
             }
             else
             {
-                Debug.Log("you must shake the bottle to uncork it!");
+                dialog.Show("you must shake the bottle to uncork it!");
                 bottle.resetBottleShake();
+                return;
             }
         }
 
         RadishCut radishCut = collision.gameObject.GetComponent<RadishCut>();
         if (radishCut && radishCut.isGrabbed == false)
         {
-            Debug.Log(collision.gameObject.name + " zostal dodany do kociolka!");
+            dialog.Show(collision.gameObject.name + " zostal dodany do kociolka!");
             cauldron.addIngredient(collision.gameObject);
             radishCut.resetRadish();
             return;
@@ -50,7 +52,7 @@ public class CollsionDetector : MonoBehaviour
         CuttableObject radish = collision.gameObject.GetComponent<CuttableObject>();
         if (radish && radish.isGrabbed == false)
         {
-            Debug.Log("you must cut the radish to add it to the cauldron!");
+            dialog.Show("you must cut the radish to add it to the cauldron!");
             // cauldron.addIngredient(collision.gameObject);
             radish.resetRadish();
             return;
@@ -59,11 +61,11 @@ public class CollsionDetector : MonoBehaviour
         PotionRed potionRed = collision.gameObject.GetComponent<PotionRed>();
         if (potionRed && potionRed.isGrabbed == false)
         {
-            Debug.Log(collision.gameObject.name + " zostal dodany do kociolka!");
+            dialog.Show(collision.gameObject.name + " zostal dodany do kociolka!");
             cauldron.addIngredient(collision.gameObject);
             potionRed.resetPotionRed();
             return;
         }
-        Debug.Log(collision.gameObject.name + " nie może zostać dodany do kociołka!");
+        dialog.Show(collision.gameObject.name + " nie może zostać dodany do kociołka!");
     }
 }
